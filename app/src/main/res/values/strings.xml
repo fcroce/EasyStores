@@ -1,0 +1,32 @@
+<resources>
+    <string name="app_name">EasyStores</string>
+    <string name="action_settings">Settings</string>
+    <string name="back_button">Back</string>
+    <string name="add_new_store">Add a new store</string>
+
+    <!-- Strings used for screens -->
+    <string name="screen_store">Store</string>
+    <string name="screen_add_store">Add a new store</string>
+    <string name="screen_scan_item">Scan an item</string>
+
+    <!--Scan item page -->
+    <string name="scan_item_barcode">Barcode:</string>
+    <string name="scan_item_cancel">Cancel</string>
+    <string name="scan_item_done">Done</string>
+
+    <!-- Store page-->
+    <string name="store_name">Store:</string>
+
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">Easy Stores</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="previous">Previous</string>
+    <string name="lorem_ipsum">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris
+        volutpat, dolor id interdum ullamcorper, risus dolor egestas lectus, sit amet mattis purus
+        dui nec risus. Maecenas non sodales nisi, vel dictum dolor. Class aptent taciti sociosqu ad
+        litora torquent per conubia nostra, per inceptos himenaeos. Suspendisse blandit eleifend
+        diam, vel rutrum tellus vulputate quis. Aliquam eget libero aliquet, imperdiet nisl a,
+        ornare ex. Sed rhoncus est ut libero porta lobortis. Fusce in dictum tellus.
+    </string>
+</resources>
