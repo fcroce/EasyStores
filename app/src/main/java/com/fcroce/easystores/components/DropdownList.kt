@@ -32,13 +32,15 @@ import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
 import com.fcroce.easystores.theme.EasyStoresTheme
 
+data class DropdownListData(val id: Int, val value: String)
+
 @Composable
 fun DropdownList(
-    itemList: List<String>,
+    itemList: List<DropdownListData>,
     modifier: Modifier = Modifier,
     selectedIndex: Int = 0,
     startOpen: Boolean = false,
-    onItemClick: (Int) -> Unit = {},
+    onItemClick: (Int, DropdownListData) -> Unit,
     fontSize: TextUnit = 16.sp,
 ) {
     var showDropdown by rememberSaveable { mutableStateOf(startOpen) }
@@ -56,7 +58,7 @@ fun DropdownList(
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = itemList[selectedIdx],
+                text = itemList[selectedIdx].value,
                 modifier = Modifier.padding(3.dp),
                 fontSize = fontSize,
                 color = MaterialTheme.colorScheme.primary,
@@ -107,13 +109,13 @@ fun DropdownList(
                                     }
                                     .clickable {
                                         selectedIdx = index
-                                        onItemClick(index)
+                                        onItemClick(index, item)
                                         showDropdown = !showDropdown
                                     },
                                 contentAlignment = Alignment.TopEnd
                             ) {
                                 Text(
-                                    text = item,
+                                    text = item.value,
                                     fontSize = fontSize,
                                 )
                             }
@@ -132,7 +134,13 @@ fun PreviewDropdownList() {
     EasyStoresTheme {
         Surface {
             DropdownList(
-                itemList = listOf("One", "Two", "Three", "Four"),
+                itemList = listOf(
+                    DropdownListData(1, "One"),
+                    DropdownListData(2, "Two"),
+                    DropdownListData(3, "Three"),
+                    DropdownListData(4, "Four"),
+                ),
+                onItemClick = { _, _ -> run {}},
                 startOpen = true,
             )
         }

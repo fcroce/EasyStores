@@ -2,6 +2,7 @@ package com.fcroce.easystores.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
@@ -21,8 +22,14 @@ import com.fcroce.easystores.R
 import com.fcroce.easystores.theme.EasyStoresTheme
 
 @Composable
-fun Item(item: String, isLast: Boolean) {
-    Row(modifier = Modifier.padding(bottom = if (isLast) 0.dp else 12.dp)) {
+fun Item(item: ItemsListData, isLast: Boolean, onClick: () -> Unit = {}) {
+    Row(
+        modifier = Modifier
+            .padding(bottom = if (isLast) 0.dp else 12.dp)
+            .clickable {
+                onClick()
+            }
+    ) {
         Image(
             painter = painterResource(R.drawable.ic_launcher_background),
             contentDescription = "Item screenshot",
@@ -34,7 +41,15 @@ fun Item(item: String, isLast: Boolean) {
 
         Spacer(modifier = Modifier.width(width = 8.dp))
 
-        Text(text = item, color = MaterialTheme.colorScheme.primary)
+        Text(text = item.name, color = MaterialTheme.colorScheme.primary)
+
+        Spacer(modifier = Modifier.width(width = 8.dp))
+
+        Text(text = item.quantity.toString(), color = MaterialTheme.colorScheme.secondary)
+
+        Spacer(modifier = Modifier.width(width = 8.dp))
+
+        Text(text = item.price.toString(), color = MaterialTheme.colorScheme.tertiary)
     }
 }
 
@@ -43,7 +58,10 @@ fun Item(item: String, isLast: Boolean) {
 fun PreviewItem() {
     EasyStoresTheme {
         Surface {
-            Item("Item 1", isLast = false)
+            Item(
+                ItemsListData("1", "Brand 1", "Item 1", 0.0, 0),
+                isLast = false
+            )
         }
     }
 }
@@ -53,7 +71,10 @@ fun PreviewItem() {
 fun PreviewItemLast() {
     EasyStoresTheme {
         Surface {
-            Item("Item 1", isLast = true)
+            Item(
+                ItemsListData("1", "Brand 1", "Item 1", 0.0, 0),
+                isLast = true
+            )
         }
     }
 }
