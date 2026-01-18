@@ -230,7 +230,7 @@ fun ScanItem(
                                 value = textFieldBrand,
                                 onValueChange = {
                                     textFieldBrand = it
-                                    productName = textFieldBrand
+                                    productBrand = textFieldBrand
                                 },
                                 label = { Text(stringResource(R.string.scan_item_enter_brand)) },
                                 keyboardOptions = KeyboardOptions(
