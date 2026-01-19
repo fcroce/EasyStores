@@ -27,12 +27,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.fcroce.easystores.R
 import com.fcroce.easystores.components.AddFloatingButton
+import com.fcroce.easystores.components.ConfirmationDialog
 import com.fcroce.easystores.components.DropdownList
 import com.fcroce.easystores.components.DropdownListData
 import com.fcroce.easystores.components.ItemsList
-import com.fcroce.easystores.components.ItemsListData
 import com.fcroce.easystores.data.AppDatabase
-import com.fcroce.easystores.data.Grocery
+import com.fcroce.easystores.data.GroceryItems
 import com.fcroce.easystores.data.Store
 import com.fcroce.easystores.data.getDatabase
 import com.fcroce.easystores.theme.EasyStoresTheme
@@ -56,22 +56,23 @@ fun getStoresFromDb(
 fun getStoreGroceryFromDb(
     db: AppDatabase,
     selectedStoreId: Int,
-    onLoaded: (List<ItemsListData>) -> Unit,
+    onLoaded: (List<GroceryItems>) -> Unit,
 ) {
     db.runInCoroutineExecutor {
         val groceryDao = db.groceryDao()
-        val grocery: List<Grocery> = groceryDao.getAll(selectedStoreId)
-        val groceryList = grocery.map { item: Grocery ->
-            ItemsListData(
-                sku = item.sku,
-                brand = item.brand,
-                name = item.name,
-                price = item.price,
-                quantity = item.quantity
-            )
-        }
+        val grocery: List<GroceryItems> = groceryDao.getAll(storeUid = selectedStoreId)
+//        val groceryList = grocery.map { item: GroceryItems ->
+//            GroceryItems(
+//                sku = item.sku,
+//                storeUid = item.storeUid,
+//                brand = item.brand,
+//                name = item.name,
+//                price = item.price,
+//                quantity = item.quantity
+//            )
+//        }
 
-        onLoaded(groceryList)
+        onLoaded(grocery)
     }
 }
 
@@ -92,7 +93,8 @@ fun Store(
     var selectedDropdownStoreId by remember { mutableStateOf(0) }
     var selectedStoreId by remember { mutableStateOf(0) }
     var storesList by remember { mutableStateOf<List<DropdownListData>>(emptyList()) }
-    var groceryList by remember { mutableStateOf<MutableList<ItemsListData>>(mutableListOf()) }
+    var groceryList by remember { mutableStateOf<MutableList<GroceryItems>>(mutableListOf()) }
+    var showClearListConfirmationDialog by remember { mutableStateOf(false) }
 
     getStoresFromDb(db, onLoaded = { list ->
         storesList = list
@@ -121,9 +123,25 @@ fun Store(
     }
 
     fun onClearGroceryList() {
-        emptyGroceryList(db, selectedStoreId)
+        showClearListConfirmationDialog = true
+    }
 
-        groceryList = mutableListOf()
+    fun resetClearListConfirmationDialog() {
+        showClearListConfirmationDialog = false
+    }
+
+    if (showClearListConfirmationDialog) {
+        ConfirmationDialog(
+            onConfirm = {
+                emptyGroceryList(db, selectedStoreId)
+                groceryList = mutableListOf()
+
+                resetClearListConfirmationDialog()
+            },
+            onDismiss = {
+                resetClearListConfirmationDialog()
+            }
+        )
     }
 
     Scaffold(

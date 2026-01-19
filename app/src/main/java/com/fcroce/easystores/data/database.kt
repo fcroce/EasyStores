@@ -10,7 +10,7 @@ import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.launch
 import java.util.concurrent.Executors
 
-@Database(entities = [Store::class, Grocery::class, StoreItems::class], version = 2)
+@Database(entities = [Store::class, Grocery::class, StoreItems::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun storeDao(): StoreDao
     abstract fun groceryDao(): GroceryDao

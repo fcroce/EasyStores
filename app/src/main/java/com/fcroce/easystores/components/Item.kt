@@ -19,10 +19,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.fcroce.easystores.R
+import com.fcroce.easystores.data.GroceryItems
 import com.fcroce.easystores.theme.EasyStoresTheme
 
 @Composable
-fun Item(item: ItemsListData, isLast: Boolean, onClick: () -> Unit = {}) {
+fun Item(item: GroceryItems, isLast: Boolean, onClick: () -> Unit = {}) {
     Row(
         modifier = Modifier
             .padding(bottom = if (isLast) 0.dp else 12.dp)
@@ -59,7 +60,14 @@ fun PreviewItem() {
     EasyStoresTheme {
         Surface {
             Item(
-                ItemsListData("1", "Brand 1", "Item 1", 0.0, 0),
+                GroceryItems(
+                    sku = "1",
+                    storeUid = 1,
+                    brand = "Brand 1",
+                    name = "Item 1",
+                    price = 0.0,
+                    quantity = 0
+                ),
                 isLast = false
             )
         }
@@ -72,8 +80,14 @@ fun PreviewItemLast() {
     EasyStoresTheme {
         Surface {
             Item(
-                ItemsListData("1", "Brand 1", "Item 1", 0.0, 0),
-                isLast = true
+                GroceryItems(
+                    sku = "1",
+                    storeUid = 1,
+                    brand = "Brand 1",
+                    name = "Item 1",
+                    price = 0.0,
+                    quantity = 0
+                ),isLast = true
             )
         }
     }

@@ -27,7 +27,7 @@ import androidx.room.Query
 )
 data class StoreItems(
     @PrimaryKey var sku: String,
-    @ColumnInfo(name = "storeUid") var storeUid: Int,
+    @ColumnInfo(index = true, name = "storeUid") var storeUid: Int,
     @ColumnInfo(name = "brand") val brand: String,
     @ColumnInfo(name = "name") val name: String,
     @ColumnInfo(name = "price") val price: Double,
@@ -41,7 +41,7 @@ interface StoreItemsDao {
     @Query("SELECT sku, storeUid, brand, name, price FROM storeItems where storeUid = :storeUid and sku = :itemSku")
     suspend fun getItem(storeUid: Int, itemSku: String): StoreItems?
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addItems(vararg items: StoreItems)
 
     @Query("DELETE FROM storeItems where sku = :itemSku and storeUid = :storeUid")

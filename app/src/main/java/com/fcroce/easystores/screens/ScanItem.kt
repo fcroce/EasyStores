@@ -36,15 +36,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.fcroce.easystores.R
-import com.fcroce.easystores.components.ItemsListData
 import com.fcroce.easystores.components.camera.BarcodeScannerAnalysis
 import com.fcroce.easystores.data.AppDatabase
 import com.fcroce.easystores.data.Grocery
+import com.fcroce.easystores.data.GroceryItems
 import com.fcroce.easystores.data.StoreItems
 import com.fcroce.easystores.data.getDatabase
 import com.fcroce.easystores.theme.EasyStoresTheme
 
-fun addItemToGroceryList(db: AppDatabase, storeId: Int, item: ItemsListData) {
+fun addItemToGroceryList(db: AppDatabase, storeId: Int, item: GroceryItems) {
     db.runInCoroutineExecutor {
         try {
             val storeItemsDao = db.storeItemsDao()
@@ -62,11 +62,8 @@ fun addItemToGroceryList(db: AppDatabase, storeId: Int, item: ItemsListData) {
 
             groceryDao.addItems(
                 Grocery(
-                    sku = item.sku,
                     storeUid = storeId,
-                    brand = item.brand,
-                    name = item.name,
-                    price = item.price,
+                    storeItemSku = item.sku,
                     quantity = item.quantity
                 )
             )
@@ -80,7 +77,7 @@ fun getItemFromGroceryList(
     db: AppDatabase,
     storeId: Int,
     itemSku: String,
-    onLoaded: (item: ItemsListData) -> Unit,
+    onLoaded: (item: GroceryItems) -> Unit,
 ) {
     db.runInCoroutineExecutor {
         try {
@@ -89,8 +86,9 @@ fun getItemFromGroceryList(
 
             if (item?.sku?.isNotEmpty() == true) {
                 onLoaded(
-                    ItemsListData(
+                    GroceryItems(
                         item.sku,
+                        storeUid = item.storeUid,
                         item.brand,
                         item.name,
                         item.price,
@@ -108,7 +106,7 @@ fun getItemFromStoreItems(
     db: AppDatabase,
     storeId: Int,
     itemSku: String,
-    onLoaded: (item: ItemsListData) -> Unit,
+    onLoaded: (item: GroceryItems) -> Unit,
 ) {
     db.runInCoroutineExecutor {
         try {
@@ -117,8 +115,9 @@ fun getItemFromStoreItems(
 
             if (item?.sku?.isNotEmpty() == true) {
                 onLoaded(
-                    ItemsListData(
+                    GroceryItems(
                         item.sku,
+                        storeUid = item.storeUid,
                         item.brand,
                         item.name,
                         item.price,
@@ -154,7 +153,7 @@ fun ScanItem(
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
 
-    fun addItem(item: ItemsListData) {
+    fun addItem(item: GroceryItems) {
         addItemToGroceryList(db, storeId, item)
         returnToPreviousScreen()
     }
@@ -327,8 +326,9 @@ fun ScanItem(
                     if (barcodeValue.isNotEmpty()) {
                         Button(onClick = {
                             addItem(
-                                ItemsListData(
+                                GroceryItems(
                                     sku = barcodeValue,
+                                    storeUid = storeId,
                                     brand = productBrand,
                                     name = productName,
                                     price = productPrice,

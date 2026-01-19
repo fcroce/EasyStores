@@ -5,6 +5,12 @@
     <string name="cancel_button">Cancel</string>
     <string name="add_new_store">Add a new store</string>
 
+    <!-- Confirmation dialog -->
+    <string name="conf_dialog_title">Confirm Action</string>
+    <string name="conf_dialog_description">Are you sure you want to continue?</string>
+    <string name="conf_dialog_ok">Ok</string>
+    <string name="conf_dialog_cancel">Cancel</string>
+
     <!-- Strings used for screens -->
     <string name="screen_store">Store</string>
     <string name="screen_add_store">Add a new store</string>

@@ -13,6 +13,10 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -21,16 +25,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.fcroce.easystores.R
 import com.fcroce.easystores.data.AppDatabase
+import com.fcroce.easystores.data.GroceryItems
 import com.fcroce.easystores.data.getDatabase
 import com.fcroce.easystores.theme.EasyStoresTheme
-
-data class ItemsListData(
-    val sku: String,
-    val brand: String,
-    val name: String,
-    val price: Double,
-    val quantity: Int
-)
 
 fun removeItemFromGroceryList(db: AppDatabase, storeId: Int, itemSku: String) {
     db.runInCoroutineExecutor {
@@ -46,15 +43,37 @@ fun removeItemFromGroceryList(db: AppDatabase, storeId: Int, itemSku: String) {
 
 @Composable
 fun ItemsList(
-    items: List<ItemsListData>,
+    items: List<GroceryItems>,
     storeId: Int,
     db: AppDatabase,
     onRemoveItem: (itemSku: String) -> Unit,
-    onItemClicked: (item: ItemsListData) -> Unit = {},
+    onItemClicked: (item: GroceryItems) -> Unit = {},
 ) {
-    fun removeRemoveItem(itemSku: String) {
-        removeItemFromGroceryList(db, storeId, itemSku)
-        onRemoveItem(itemSku)
+    var itemSkuToRemove by remember { mutableStateOf("") }
+    var showDeleteConfirmationDialog by remember { mutableStateOf(false) }
+
+    fun removeItem(itemSku: String) {
+        itemSkuToRemove = itemSku
+        showDeleteConfirmationDialog = true
+    }
+
+    fun resetDeleteConfirmationDialog() {
+        itemSkuToRemove = ""
+        showDeleteConfirmationDialog = false
+    }
+
+    if (showDeleteConfirmationDialog) {
+        ConfirmationDialog(
+            onConfirm = {
+                removeItemFromGroceryList(db, storeId, itemSkuToRemove)
+                onRemoveItem(itemSkuToRemove)
+
+                resetDeleteConfirmationDialog()
+            },
+            onDismiss = {
+                resetDeleteConfirmationDialog()
+            }
+        )
     }
 
     Column(modifier = Modifier.padding(all = 12.dp)) {
@@ -70,7 +89,7 @@ fun ItemsList(
 
                 Button(
                     shape = CircleShape,
-                    onClick = { removeRemoveItem(item.sku) }
+                    onClick = { removeItem(item.sku) }
                 ) {
                     Icon(
                         imageVector = Icons.Filled.Delete,
@@ -93,8 +112,22 @@ fun PreviewItemsList() {
 
             ItemsList(
                 items = listOf(
-                    ItemsListData("1", "Brand 1", "Item 1", 0.0, 0),
-                    ItemsListData("2", "Brand 1", "Item 2", 0.0, 0),
+                    GroceryItems(
+                        sku = "1",
+                        storeUid = 1,
+                        brand = "Brand 1",
+                        name = "Item 1",
+                        price = 0.0,
+                        quantity = 0
+                    ),
+                    GroceryItems(
+                        sku = "2",
+                        storeUid = 1,
+                        brand = "Brand 1",
+                        name = "Item 2",
+                        price = 0.0,
+                        quantity = 0
+                    ),
                 ),
                 storeId = 0,
                 db = db,
